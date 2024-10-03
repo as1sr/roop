@@ -37,7 +37,8 @@ jobs:
       - name: Install TensorFlow (ignore errors)
         continue-on-error: true  # Allow this step to fail and continue
         run: |
-          pip install tensorflow==2.14.0
+          pip install tensorflow==2.13.1
+          pip install tensorflow
 
           
       - name: Generate timestamp for output video
