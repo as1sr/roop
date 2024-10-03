@@ -40,7 +40,7 @@ jobs:
 
       - name: Run face swap operation
         run: |
-          cd roop
+          
           python run.py -s "${{ github.event.inputs.image_path }}" -t "${{ github.event.inputs.video_path }}" -o "${{ env.OUTPUT_FILE }}" --keep-frames --keep-fps --temp-frame-quality 1 --output-video-quality 1 --execution-provider cuda --frame-processor face_swapper face_enhancer
 
       - name: Upload result video
