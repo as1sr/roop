@@ -1,0 +1,50 @@
+name: Roop Manual Face Swap
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_path:
+        description: 'Path to the source image'
+        required: true
+        default: 'face2.png'
+      video_path:
+        description: 'Path to the target video'
+        required: true
+        default: 'video3.mp4'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update --yes
+          sudo apt install nvidia-cuda-toolkit --yes
+          pip install onnxruntime-gpu==1.18.0
+          pip install -r requirements.txt
+          pip install onnxruntime-gpu==1.18.0 --upgrade
+          pip install opennsfw2 keras --upgrade
+
+      - name: Generate timestamp for output video
+        id: vars
+        run: echo "OUTPUT_FILE=face_restored_$(date +'%Y-%m-%d_%H-%M-%S').mp4" >> $GITHUB_ENV
+
+      - name: Run face swap operation
+        run: |
+          cd roop
+          python run.py -s "${{ github.event.inputs.image_path }}" -t "${{ github.event.inputs.video_path }}" -o "${{ env.OUTPUT_FILE }}" --keep-frames --keep-fps --temp-frame-quality 1 --output-video-quality 1 --execution-provider cuda --frame-processor face_swapper face_enhancer
+
+      - name: Upload result video
+        uses: actions/upload-artifact@v3
+        with:
+          name: Result Video
+          path: roop/${{ env.OUTPUT_FILE }}
+          
