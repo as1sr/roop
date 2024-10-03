@@ -34,6 +34,12 @@ jobs:
           pip install onnxruntime-gpu==1.18.0 --upgrade
           pip install opennsfw2 keras --upgrade
 
+      - name: Install TensorFlow (ignore errors)
+        continue-on-error: true  # Allow this step to fail and continue
+        run: |
+          pip install tensorflow==2.14.0
+
+          
       - name: Generate timestamp for output video
         id: vars
         run: echo "OUTPUT_FILE=face_restored_$(date +'%Y-%m-%d_%H-%M-%S').mp4" >> $GITHUB_ENV
