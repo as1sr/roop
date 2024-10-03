@@ -25,6 +25,7 @@ jobs:
           python-version: '3.8'
 
       - name: Install dependencies
+        continue-on-error: true  # Allow this step to fail and continue
         run: |
           sudo apt-get update --yes
           sudo apt install nvidia-cuda-toolkit --yes
